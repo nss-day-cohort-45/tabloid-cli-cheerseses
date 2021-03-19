@@ -9,6 +9,7 @@ namespace TabloidCLI.UserInterfaceManagers
         private readonly IUserInterfaceManager _parentUI;
         private PostRepository _postRepository;
         private AuthorRepository _authorRepository;
+        private BlogRepository _blogRepository;
         private string _connectionString;
 
         public PostManager(IUserInterfaceManager parentUI, string connectionString)
@@ -16,6 +17,7 @@ namespace TabloidCLI.UserInterfaceManagers
             _parentUI = parentUI;
             _postRepository = new PostRepository(connectionString);
             _authorRepository = new AuthorRepository(connectionString);
+            _blogRepository = new BlogRepository(connectionString);
             _connectionString = connectionString;
         }
 
@@ -123,20 +125,20 @@ namespace TabloidCLI.UserInterfaceManagers
             Author author = authors[choice - 1];
 
             post.Author = author;
-         
 
-            // Setup blog list here: List<Blog> blogs = _blogRepository.GetAll();
-            // foreach(Blog b in blogs)
-            // {
-            //      Console.WriteLine($"blog stuff here");
-            // }
-            // Console.Write("> ");
-        
-            
-            // Waiting on the BlogRepository to get released on GitHub to implement the above code
-            // Blog ID is hardcoded until then. Will switch it to a ReadLine().
-            post.Blog.Id = 1;
 
+            List<Blog> blogs = _blogRepository.GetAll();
+            foreach(Blog b in blogs)
+            {
+                Console.WriteLine($"{b.Id}) {b.Title}");
+            }
+            Console.Write("> ");
+
+            int bChoice = int.Parse(Console.ReadLine());
+            Blog blog = blogs[bChoice - 1];
+
+            post.Blog = blog;
+  
             _postRepository.Insert(post);
         }
 
