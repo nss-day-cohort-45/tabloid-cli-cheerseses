@@ -87,12 +87,16 @@ namespace TabloidCLI
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO Post (Title, Url, PublishDateTime )
-                                            VALUES (@title, @url, @publishDateTime)";
+                                        OUTPUT INSERTED.Id    
+                                        VALUES (@title, @url, @publishDateTime)";
                     cmd.Parameters.AddWithValue("@title", post.Title);
                     cmd.Parameters.AddWithValue("@url", post.Url);
                     cmd.Parameters.AddWithValue("@publishDateTime", post.PublishDateTime);
 
-                    cmd.ExecuteNonQuery();
+                    int id = (int)cmd.ExecuteScalar();
+                    // cmd.ExecuteNonQuery();
+
+                    post.Id = id;
                 }
             }
         }

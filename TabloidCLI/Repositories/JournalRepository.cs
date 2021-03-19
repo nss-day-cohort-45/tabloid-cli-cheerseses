@@ -109,6 +109,9 @@ namespace TabloidCLI.Repositories
             }
         }
 
+        /// <summary>
+        /// Update Journal entry by passing in a journal object
+        /// </summary>
         public void Update(Journal journal)
         {
             using (SqlConnection conn = Connection)
@@ -125,6 +128,7 @@ namespace TabloidCLI.Repositories
                     cmd.Parameters.AddWithValue("@title", journal.Title);
                     cmd.Parameters.AddWithValue("@content", journal.Content);
                     cmd.Parameters.AddWithValue("@createDateTime", journal.CreateDateTime);
+                    cmd.Parameters.AddWithValue("@id", journal.Id);
 
                     cmd.ExecuteNonQuery();
                 }
