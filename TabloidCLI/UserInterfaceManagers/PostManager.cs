@@ -70,36 +70,36 @@ Published: {post.PublishDateTime}");
             }
         }
 
-        //private Post Choose(string prompt = null)
-        //{
-        //    if (prompt == null)
-        //    {
-        //        prompt = "Please choose a post:";
-        //    }
+        private Post Choose(string prompt = null)
+        {
+            if (prompt == null)
+            {
+                prompt = "Please choose a post:";
+            }
 
-        //    Console.WriteLine(prompt);
+            Console.WriteLine(prompt);
 
-        //    List<Post> posts = _postRepository.GetAll();
+            List<Post> posts = _postRepository.GetAll();
 
-        //    for (int i = 0; i < posts.Count; i++)
-        //    {
-        //        Post post = posts[i];
-        //        Console.WriteLine($" {i + 1}) {post.Title}");
-        //    }
-        //    Console.Write("> ");
+            for (int i = 0; i < posts.Count; i++)
+            {
+                Post post = posts[i];
+                Console.WriteLine($" {i + 1}) {post.Title}");
+            }
+            Console.Write("> ");
 
-        //    string input = Console.ReadLine();
-        //    try
-        //    {
-        //        int choice = int.Parse(input);
-        //        return posts[choice - 1];
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("Invalid Selection");
-        //        return null;
-        //    }
-        //}
+            string input = Console.ReadLine();
+            try
+            {
+                int choice = int.Parse(input);
+                return posts[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
+        }
 
         private void Add()
         {
@@ -145,36 +145,65 @@ Published: {post.PublishDateTime}");
             _postRepository.Insert(post);
         }
 
-        //    private void Edit()
-        //    {
-        //        Post postToEdit = Choose("Which author would you like to edit?");
-        //        if (postToEdit == null)
-        //        {
-        //            return;
-        //        }
+        private void Edit()
+        {
+            Post postToEdit = Choose("Which post would you like to edit?");
+            if (postToEdit == null)
+            {
+                return;
+            }
 
-        //        Console.WriteLine();
-        //        Console.Write("New first name (blank to leave unchanged: ");
-        //        string firstName = Console.ReadLine();
-        //        if (!string.IsNullOrWhiteSpace(firstName))
-        //        {
-        //            authorToEdit.FirstName = firstName;
-        //        }
-        //        Console.Write("New last name (blank to leave unchanged: ");
-        //        string lastName = Console.ReadLine();
-        //        if (!string.IsNullOrWhiteSpace(lastName))
-        //        {
-        //            authorToEdit.LastName = lastName;
-        //        }
-        //        Console.Write("New bio (blank to leave unchanged: ");
-        //        string bio = Console.ReadLine();
-        //        if (!string.IsNullOrWhiteSpace(bio))
-        //        {
-        //            authorToEdit.Bio = bio;
-        //        }
+            Console.WriteLine();
+            Console.Write("New post name (blank to leave unchanged: ");
+            string title = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                postToEdit.Title = title;
+            }
 
-        //        _authorRepository.Update(authorToEdit);
-        //    }
+            Console.Write("New URL (blank to leave unchanged: ");
+            string url = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                postToEdit.Url = url;
+            }
+
+            Console.Write("New Publish Date Time: ");
+            string date = (Console.ReadLine();
+            if(!string.IsNullOrWhiteSpace(date))
+            {
+                postToEdit.PublishDateTime = Convert.ToDateTime(date);
+            }
+
+            Console.WriteLine("New Author:");
+            List<Author> authors = _authorRepository.GetAll();
+
+            foreach (Author a in authors)
+            {
+                Console.WriteLine($"{a.Id}) {a.FullName}");
+            }
+            Console.Write("> ");
+
+            int choice = int.Parse(Console.ReadLine());
+            Author author = authors[choice - 1];
+
+            postToEdit.Author = author;
+
+            Console.Write("New blog (blank to leave unchanged: ");
+            List<Blog> blogs = _blogRepository.GetAll();
+            foreach (Blog b in blogs)
+            {
+                Console.WriteLine($"{b.Id}) {b.Title}");
+            }
+            Console.Write("> ");
+
+            int bChoice = int.Parse(Console.ReadLine());
+            Blog blog = blogs[bChoice - 1];
+
+            postToEdit.Blog = blog;
+      
+            _postRepository.Update(postToEdit);
+        }
 
         //    private void Remove()
         //    {
