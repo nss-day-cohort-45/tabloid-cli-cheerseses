@@ -109,7 +109,7 @@ namespace TabloidCLI
 
         public void Update(Blog blog)
         {
-            using (SqlCommand conn = Connection)
+            using (SqlConnection conn = Connection)
             {
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
@@ -117,9 +117,10 @@ namespace TabloidCLI
                     cmd.CommandText = @"UPDATE Blog
                                            SET Title = @Title,
                                                URL = @Url
-                                         WHERE id = @id";
+                                         WHERE id = @Id";
                     cmd.Parameters.AddWithValue("@Title", blog.Title);
                     cmd.Parameters.AddWithValue("@Url", blog.Url);
+                    cmd.Parameters.AddWithValue("@Id", blog.Id);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -131,7 +132,7 @@ namespace TabloidCLI
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
-                using (SqlCommand cmd = Connection)
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"DELETE FROM Blog WHERE id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
