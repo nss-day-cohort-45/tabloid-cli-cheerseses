@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using TabloidCLI.Models;
+
 
 namespace TabloidCLI.UserInterfaceManagers
 {
@@ -46,7 +49,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void List()
         {
-            throw new NotImplementedException();
+            List<Tag> tags = _tagRepository.GetAll();
         }
 
         private void Add()
