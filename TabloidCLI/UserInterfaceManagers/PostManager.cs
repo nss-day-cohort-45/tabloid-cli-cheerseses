@@ -118,9 +118,24 @@ namespace TabloidCLI.UserInterfaceManagers
                 Console.WriteLine($"{a.Id}) {a.FullName}");
             }
             Console.Write("> ");
-            post.Author.Id = int.Parse(Console.ReadLine());
+
+            int choice = int.Parse(Console.ReadLine());
+            Author author = authors[choice - 1];
+
+            post.Author = author;
+         
 
             // Setup blog list here: List<Blog> blogs = _blogRepository.GetAll();
+            // foreach(Blog b in blogs)
+            // {
+            //      Console.WriteLine($"blog stuff here");
+            // }
+            // Console.Write("> ");
+        
+            
+            // Waiting on the BlogRepository to get released on GitHub to implement the above code
+            // Blog ID is hardcoded until then. Will switch it to a ReadLine().
+            post.Blog.Id = 1;
 
             _postRepository.Insert(post);
         }
