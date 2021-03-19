@@ -34,7 +34,7 @@ namespace TabloidCLI.UserInterfaceManagers
             switch (choice)
             {
                 case "1":
-                    //List();
+                    List();
                     return this;
                 case "2":
                     Add();
@@ -56,14 +56,17 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
-        //private void List()
-        //{
-        //    List<Post> posts = _postRepository.GetAll();
-        //    foreach (Post post in posts)
-        //    {
-        //        Console.WriteLine(post);
-        //    }
-        //}
+        private void List()
+        {
+            List<Post> posts = _postRepository.GetAll();
+            foreach (Post post in posts)
+            {
+                Console.WriteLine(@$"Id: {post.Id}
+Title: {post.Title} 
+Url: {post.Url} 
+Published: {post.PublishDateTime}");
+            }
+        }
 
         //private Post Choose(string prompt = null)
         //{
