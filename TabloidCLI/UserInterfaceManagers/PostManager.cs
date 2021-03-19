@@ -169,7 +169,7 @@ Published: {post.PublishDateTime}");
             }
 
             Console.Write("New Publish Date Time: ");
-            string date = (Console.ReadLine();
+            string date = (Console.ReadLine());
             if(!string.IsNullOrWhiteSpace(date))
             {
                 postToEdit.PublishDateTime = Convert.ToDateTime(date);
@@ -191,7 +191,7 @@ Published: {post.PublishDateTime}");
 
             Console.Write("New blog (blank to leave unchanged: ");
             List<Blog> blogs = _blogRepository.GetAll();
-            foreach (Blog b in blogs)
+            foreach(Blog b in blogs)
             {
                 Console.WriteLine($"{b.Id}) {b.Title}");
             }
@@ -201,7 +201,8 @@ Published: {post.PublishDateTime}");
             Blog blog = blogs[bChoice - 1];
 
             postToEdit.Blog = blog;
-      
+            
+
             _postRepository.Update(postToEdit);
         }
 
