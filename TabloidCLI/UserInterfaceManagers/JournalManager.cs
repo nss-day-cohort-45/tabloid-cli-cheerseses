@@ -102,9 +102,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
             Console.Write("Content: ");
             journal.Content = Console.ReadLine();
-
-            Console.Write("CreateDateTime: ");
-            
+           
             journal.CreateDateTime = DateTime.Now;
 
             _journalRepository.Insert(journal);
@@ -127,10 +125,12 @@ namespace TabloidCLI.UserInterfaceManagers
             }
             Console.Write("New Content (blank to leave unchanged: ");
             string content = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(title))
+            if (!string.IsNullOrWhiteSpace(content))
             {
                 journalToEdit.Content = content;
             }
+
+            journalToEdit.CreateDateTime = DateTime.Now;
 
             _journalRepository.Update(journalToEdit);
         }
