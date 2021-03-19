@@ -42,13 +42,13 @@ namespace TabloidCLI.UserInterfaceManagers
                     Add();
                     return this;
                 case "3":
-                    //Add();
-                    return this;
-                case "4":
                     //Edit();
                     return this;
+                case "4":
+                    Remove();
+                    return this;
                 case "5":
-                    //Remove();
+                   
                     return this;
                 case "0":
                     return _parentUI;
@@ -70,36 +70,36 @@ Published: {post.PublishDateTime}");
             }
         }
 
-        //private Post Choose(string prompt = null)
-        //{
-        //    if (prompt == null)
-        //    {
-        //        prompt = "Please choose a post:";
-        //    }
+        private Post Choose(string prompt = null)
+        {
+            if (prompt == null)
+            {
+                prompt = "Please choose a post:";
+            }
 
-        //    Console.WriteLine(prompt);
+            Console.WriteLine(prompt);
 
-        //    List<Post> posts = _postRepository.GetAll();
+            List<Post> posts = _postRepository.GetAll();
 
-        //    for (int i = 0; i < posts.Count; i++)
-        //    {
-        //        Post post = posts[i];
-        //        Console.WriteLine($" {i + 1}) {post.Title}");
-        //    }
-        //    Console.Write("> ");
+            for (int i = 0; i < posts.Count; i++)
+            {
+                Post post = posts[i];
+                Console.WriteLine($" {i + 1}) {post.Title}");
+            }
+            Console.Write("> ");
 
-        //    string input = Console.ReadLine();
-        //    try
-        //    {
-        //        int choice = int.Parse(input);
-        //        return posts[choice - 1];
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("Invalid Selection");
-        //        return null;
-        //    }
-        //}
+            string input = Console.ReadLine();
+            try
+            {
+                int choice = int.Parse(input);
+                return posts[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
+        }
 
         private void Add()
         {
@@ -176,14 +176,16 @@ Published: {post.PublishDateTime}");
         //        _authorRepository.Update(authorToEdit);
         //    }
 
-        //    private void Remove()
-        //    {
-        //        Author authorToDelete = Choose("Which author would you like to remove?");
-        //        if (authorToDelete != null)
-        //        {
-        //            _authorRepository.Delete(authorToDelete.Id);
-        //        }
-        //    }
-        //}
+        private void Remove()
+        {
+            Post postToDelete = Choose("Which post would you like to remove?");
+            if (postToDelete != null)
+            {
+                _postRepository.Delete(postToDelete.Id);
+            }
+        }
     }
-}
+ }
+
+
+
