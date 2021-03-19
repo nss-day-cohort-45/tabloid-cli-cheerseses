@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using TabloidCLI.Models
+using TabloidCLI.Models;
 
 namespace TabloidCLI.UserInterfaceManagers
 {
@@ -55,7 +55,9 @@ namespace TabloidCLI.UserInterfaceManagers
             List<Journal> journals = _journalRepository.GetAll();
             foreach (Journal journal in journals)
             { 
-                Console.WriteLine(journal); 
+                Console.WriteLine($"Title: { journal.Title}");
+                Console.WriteLine($"Date: {journal.CreateDateTime}");
+                Console.WriteLine($"Content: {journal.Content}");
             }
         }
 
@@ -72,7 +74,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
             for (int i = 0; i < journals.Count; i++)
             {
-                Journal journal = journal[i];
+                Journal journal = journals[i];
                 Console.WriteLine($" {i + 1}) {journal.Title}");
             }
             Console.Write("> ");
@@ -91,8 +93,8 @@ namespace TabloidCLI.UserInterfaceManagers
         }
 
         private void Add()
-        { 
-            Console.WriteLine("New Journal Entries")
+        {
+            Console.WriteLine("New Journal Entries");
             Journal journal = new Journal();
 
             Console.Write("Title: ");
@@ -102,7 +104,8 @@ namespace TabloidCLI.UserInterfaceManagers
             journal.Content = Console.ReadLine();
 
             Console.Write("CreateDateTime: ");
-            journal.CreateDateTime = Console.ReadLine();
+            
+            journal.CreateDateTime = DateTime.Now;
 
             _journalRepository.Insert(journal);
         }
