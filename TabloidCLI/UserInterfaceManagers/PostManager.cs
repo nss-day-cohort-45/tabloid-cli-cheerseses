@@ -42,7 +42,7 @@ namespace TabloidCLI.UserInterfaceManagers
                     Add();
                     return this;
                 case "3":
-                    //Add();
+                    Edit();
                     return this;
                 case "4":
                     //Edit();
