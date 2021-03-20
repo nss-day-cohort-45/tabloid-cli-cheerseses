@@ -27,6 +27,7 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine(" 4) Post Management");
             Console.WriteLine(" 5) Tag Management");
             Console.WriteLine(" 6) Search by Tag");
+            Console.WriteLine(" *) Color Themes");
             Console.WriteLine(" 0) Exit");
 
             Console.Write("> ");
@@ -42,6 +43,7 @@ namespace TabloidCLI.UserInterfaceManagers
                 case "0":
                     Console.WriteLine("Good bye");
                     return null;
+                case "*": return new ColorManager(this);
                 default:
                     Console.WriteLine("Invalid Selection");
                     return this;
