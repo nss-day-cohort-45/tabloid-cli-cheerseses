@@ -45,10 +45,10 @@ namespace TabloidCLI.UserInterfaceManagers
                     Edit();
                     return this;
                 case "4":
-                    //Edit();
+                    Remove();
                     return this;
                 case "5":
-                    //Remove();
+                   
                     return this;
                 case "0":
                     return _parentUI;
@@ -168,14 +168,14 @@ Published: {post.PublishDateTime}");
                 postToEdit.Url = url;
             }
 
-            Console.Write("New Publish Date Time: ");
+            Console.Write("New Publish Date Time (blank to leave unchanged: ");
             string date = (Console.ReadLine());
             if(!string.IsNullOrWhiteSpace(date))
             {
                 postToEdit.PublishDateTime = Convert.ToDateTime(date);
             }
 
-            Console.WriteLine("New Author:");
+            Console.WriteLine("New Author (blank to leave unchanged:");
             List<Author> authors = _authorRepository.GetAll();
 
             foreach (Author a in authors)
@@ -206,14 +206,16 @@ Published: {post.PublishDateTime}");
             _postRepository.Update(postToEdit);
         }
 
-        //    private void Remove()
-        //    {
-        //        Author authorToDelete = Choose("Which author would you like to remove?");
-        //        if (authorToDelete != null)
-        //        {
-        //            _authorRepository.Delete(authorToDelete.Id);
-        //        }
-        //    }
-        //}
+        private void Remove()
+        {
+            Post postToDelete = Choose("Which post would you like to remove?");
+            if (postToDelete != null)
+            {
+                _postRepository.Delete(postToDelete.Id);
+            }
+        }
     }
-}
+ }
+
+
+
