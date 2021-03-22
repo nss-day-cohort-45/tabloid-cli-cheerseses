@@ -43,7 +43,7 @@ namespace TabloidCLI.UserInterfaceManagers
                     Add();
                     return this;
                 case "3":
-                    //Edit();
+                    Edit();
                     return this;
                 case "4":
                     Remove();
@@ -153,6 +153,7 @@ namespace TabloidCLI.UserInterfaceManagers
             _postRepository.Insert(post);
         }
 
+<<<<<<< HEAD
         private void View()
         {
             Post postToView = Choose("Which post would you like to view?");
@@ -194,6 +195,77 @@ namespace TabloidCLI.UserInterfaceManagers
 
         //        _authorRepository.Update(authorToEdit);
         //    }
+=======
+        private void Edit()
+        {
+            Post postToEdit = Choose("Which post would you like to edit?");
+            if (postToEdit == null)
+            {
+                return;
+            }
+
+            Console.WriteLine();
+            Console.Write("New post name (blank to leave unchanged): ");
+            string title = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                postToEdit.Title = title;
+            }
+
+            Console.Write("New URL (blank to leave unchanged): ");
+            string url = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                postToEdit.Url = url;
+            }
+
+            Console.Write("New Publish Date Time (blank to leave unchanged): ");
+            string date = (Console.ReadLine());
+            if(!string.IsNullOrWhiteSpace(date))
+            {
+                postToEdit.PublishDateTime = Convert.ToDateTime(date);
+            }
+
+            Console.WriteLine("New Author (blank to leave unchanged):");
+            List<Author> authors = _authorRepository.GetAll();
+
+            foreach (Author a in authors)
+            {
+                Console.WriteLine($"{a.Id}) {a.FullName}");
+            }
+            Console.Write("> ");
+            
+            string authorChoice = Console.ReadLine();
+
+            if(!string.IsNullOrWhiteSpace(authorChoice))
+            {
+                int choice = int.Parse(authorChoice);
+                Author author = authors[choice - 1];
+                postToEdit.Author = author;
+            }
+
+
+
+            Console.Write("New blog (blank to leave unchanged): ");
+            List<Blog> blogs = _blogRepository.GetAll();
+            foreach(Blog b in blogs)
+            {
+                Console.WriteLine($"{b.Id}) {b.Title}");
+            }
+            Console.Write("> ");
+
+            string blogChoice = Console.ReadLine();
+
+            if(!string.IsNullOrWhiteSpace(blogChoice))
+            {
+                int bChoice = int.Parse(blogChoice);
+                Blog blog = blogs[bChoice - 1];
+                postToEdit.Blog = blog;
+            }           
+
+            _postRepository.Update(postToEdit);
+        }
+>>>>>>> main
 
         private void Remove()
         {
