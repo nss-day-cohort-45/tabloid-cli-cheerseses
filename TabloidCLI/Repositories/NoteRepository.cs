@@ -75,24 +75,23 @@ namespace TabloidCLI
             }
         }
 
-        public List<Note> GetByPost(int postId)
+        public List<Note> GetByPost(int PostId)
         {
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT n.id,
+                    cmd.CommandText = @"SELECT n.id AS NoteId,
                                                n.Title As NoteTitle,
                                                n.Content As NoteContent,
                                                n.CreateDateTime,
-                                               n.PostId,
                                                p.Title AS PostTitle,
                                                p.URL AS PostUrl
-                                          FROM Note n 
-                                               LEFT JOIN Post p on n.PostId = p.Id 
-                                         WHERE n.PostId = @postId";
-                    cmd.Parameters.AddWithValue("@postId", postId);
+                                          FROM Post p  
+                                               LEFT JOIN Note n on n.PostId = p.Id
+                                         WHERE p.Id = @Id";
+                    cmd.Parameters.AddWithValue("@Id", PostId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     List<Note> notes = new List<Note>();
@@ -103,15 +102,7 @@ namespace TabloidCLI
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Title = reader.GetString(reader.GetOrdinal("NoteTitle")),
                             Content = reader.GetString(reader.GetOrdinal("NoteContent")),
-                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
-
-                            Post = new Post()
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Title = reader.GetString(reader.GetOrdinal("PostTitle")),
-                                Url = reader.GetString(reader.GetOrdinal("PostUrl")),
-                                PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
-                            }
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime"))
                         };
 
                         notes.Add(note);
@@ -132,12 +123,11 @@ namespace TabloidCLI
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     //OUTPUT INSERTED.Id
-                    cmd.CommandText = @"INSERT INTO Note (Title, Content, CreateDateTime, PostId)
-                                        VALUES (@title, @content, @createDateTime, @postId)";
+                    cmd.CommandText = @"INSERT INTO Note (Title, Content, CreateDateTime)
+                                        VALUES (@title, @content, @createDateTime)";
                     cmd.Parameters.AddWithValue("@title", note.Title);
                     cmd.Parameters.AddWithValue("@content", note.Content);
                     cmd.Parameters.AddWithValue("@createDateTime", note.CreateDateTime);
-                    cmd.Parameters.AddWithValue("@postId", note.Post.Id);
 
                     cmd.ExecuteNonQuery();
 
