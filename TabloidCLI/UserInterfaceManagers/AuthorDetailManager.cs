@@ -78,6 +78,7 @@ namespace TabloidCLI.UserInterfaceManagers
             {
                 Console.WriteLine($"{post.Blog.Title} - {post.Blog.Url}");
             }
+            Console.WriteLine("");
         }
 
         private void AddTag()
