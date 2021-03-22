@@ -42,6 +42,7 @@ namespace TabloidCLI
             }
         }
 
+
         public Blog Get(int id)
         {
             using (SqlConnection conn = Connection)

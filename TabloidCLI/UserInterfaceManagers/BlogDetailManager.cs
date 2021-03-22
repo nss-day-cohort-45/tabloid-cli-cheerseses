@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using TabloidCLI.Models;
-using TabloidCLI.Repositories;
 
 namespace TabloidCLI.UserInterfaceManagers
 {
@@ -9,6 +8,7 @@ namespace TabloidCLI.UserInterfaceManagers
     {
         private IUserInterfaceManager _parentUI;
         private AuthorRepository _authorRepository;
+        private PostRepository _postRepository;
         private BlogRepository _blogRepository;
         private TagRepository _tagRepository;
         private int _blogId;
@@ -17,6 +17,7 @@ namespace TabloidCLI.UserInterfaceManagers
         {
             _parentUI = parentUI;
             _authorRepository = new AuthorRepository(connectionString);
+            _postRepository = new PostRepository(connectionString);
             _blogRepository = new BlogRepository(connectionString);
             _tagRepository = new TagRepository(connectionString);
             _blogId = blogId;
@@ -46,7 +47,7 @@ namespace TabloidCLI.UserInterfaceManagers
                     //RemoveTag();
                     return this;
                 case "4":
-                    //Add View Posts method here
+                    ViewPosts();
                     return this;
                 case "0":
                     return _parentUI;
@@ -66,7 +67,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void ViewPosts()
         {
-            List<Post> posts = _postRepository.GetByAuthor(_authorId);
+            List<Post> posts = _postRepository.GetByBlog(_blogId);
             foreach (Post post in posts)
             {
                 Console.WriteLine($"{post.Blog.Title} - {post.Blog.Url}");
