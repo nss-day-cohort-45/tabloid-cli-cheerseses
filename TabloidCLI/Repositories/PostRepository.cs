@@ -4,7 +4,6 @@ using Microsoft.Data.SqlClient;
 using TabloidCLI.Models;
 using TabloidCLI.Repositories;
 
-//namespace TabloidCLI.Repositories
 namespace TabloidCLI
 {
     public class PostRepository : DatabaseConnector, IRepository<Post>

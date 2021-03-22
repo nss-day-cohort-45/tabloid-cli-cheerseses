@@ -25,11 +25,11 @@ namespace TabloidCLI.UserInterfaceManagers
         {
             Console.WriteLine("Post Menu");
             Console.WriteLine(" 1) List Posts");
-            Console.WriteLine(" 2) Add Post");
-            Console.WriteLine(" 3) Edit Post");
-            Console.WriteLine(" 4) Remove Post");
-            Console.WriteLine(" 5) Note Management");
-            Console.WriteLine(" 6) Post Details");
+            Console.WriteLine(" 2) Post Details");
+            Console.WriteLine(" 3) Add Post");
+            Console.WriteLine(" 4) Edit Post");
+            Console.WriteLine(" 5) Remove Post");
+            Console.WriteLine(" 6) Note Management");
             Console.WriteLine(" 0) Return to Main Menu");
 
             Console.Write("> ");
@@ -40,18 +40,6 @@ namespace TabloidCLI.UserInterfaceManagers
                     List();
                     return this;
                 case "2":
-                    Add();
-                    return this;
-                case "3":
-                    Edit();
-                    return this;
-                case "4":
-                    Remove();
-                    return this;
-                case "5":
-                   
-                    return this;
-                case "6":
                     Post post = Choose();
                     if (post == null)
                     {
@@ -61,6 +49,19 @@ namespace TabloidCLI.UserInterfaceManagers
                     {
                         return new PostDetailManager(this, _connectionString, post.Id);
                     }
+                    return this;
+                case "3":
+                    Add();
+                    return this;
+                case "4":
+                    Edit();
+                    return this;
+                case "5":
+                    Remove();
+                    return this;
+                case "6":
+                    // Note management method here
+                    return this;
                 case "0":
                     return _parentUI;
                 default:
@@ -137,7 +138,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
             post.Author = author;
 
-
+            Console.WriteLine("Please Choose A Blog:");
             List<Blog> blogs = _blogRepository.GetAll();
             foreach (Blog b in blogs)
             {
@@ -153,7 +154,6 @@ namespace TabloidCLI.UserInterfaceManagers
             _postRepository.Insert(post);
         }
 
-<<<<<<< HEAD
         private void View()
         {
             Post postToView = Choose("Which post would you like to view?");
@@ -165,37 +165,6 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine($"Title: {postToView.Title} - Url: {postToView.Url}");
         }
 
-        //    private void Edit()
-        //    {
-        //        Post postToEdit = Choose("Which author would you like to edit?");
-        //        if (postToEdit == null)
-        //        {
-        //            return;
-        //        }
-
-        //        Console.WriteLine();
-        //        Console.Write("New first name (blank to leave unchanged: ");
-        //        string firstName = Console.ReadLine();
-        //        if (!string.IsNullOrWhiteSpace(firstName))
-        //        {
-        //            authorToEdit.FirstName = firstName;
-        //        }
-        //        Console.Write("New last name (blank to leave unchanged: ");
-        //        string lastName = Console.ReadLine();
-        //        if (!string.IsNullOrWhiteSpace(lastName))
-        //        {
-        //            authorToEdit.LastName = lastName;
-        //        }
-        //        Console.Write("New bio (blank to leave unchanged: ");
-        //        string bio = Console.ReadLine();
-        //        if (!string.IsNullOrWhiteSpace(bio))
-        //        {
-        //            authorToEdit.Bio = bio;
-        //        }
-
-        //        _authorRepository.Update(authorToEdit);
-        //    }
-=======
         private void Edit()
         {
             Post postToEdit = Choose("Which post would you like to edit?");
@@ -265,7 +234,6 @@ namespace TabloidCLI.UserInterfaceManagers
 
             _postRepository.Update(postToEdit);
         }
->>>>>>> main
 
         private void Remove()
         {
