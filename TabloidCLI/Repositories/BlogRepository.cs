@@ -54,11 +54,15 @@ namespace TabloidCLI
                     //FROM Blog b
                     //LEFT JOIN Tag t on t.Id = b.Id";
 
-                    cmd.CommandText = @"SELECT Id,
-                                               Title,
-                                               Url
-                                        FROM Blog
-                                        WHERE Id = @id";
+                    cmd.CommandText = @"SELECT b.Id,
+                                               b.Title,
+                                               b.Url,
+                                               bt.Id AS TagId,
+                                               t.Name
+                                        FROM Blog b
+                                            LEFT JOIN BlogTag bt on bt.BlogId = b.Id
+                                            LEFT JOIN Tag t on t.id = bt.TagId
+                                        WHERE b.Id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
 
                     Blog blog = null;
@@ -76,14 +80,14 @@ namespace TabloidCLI
                             };
                         }
 
-                        //if (!reader.IsDBNull(reader.GetOrdinal("TagId")))
-                        //{
-                        //    blog.Tags.Add(new Tag()
-                        //    {
-                        //        Id = reader.GetInt32(reader.GetOrdinal("TagId")),
-                        //        Name = reader.GetString(reader.GetOrdinal("Name"))
-                        //    });
-                        //}
+                        if (!reader.IsDBNull(reader.GetOrdinal("TagId")))
+                        {
+                            blog.Tags.Add(new Tag()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("TagId")),
+                                Name = reader.GetString(reader.GetOrdinal("Name"))
+                            });
+                        }
                     }
 
                     reader.Close();
