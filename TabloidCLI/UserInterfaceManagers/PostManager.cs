@@ -154,28 +154,28 @@ Published: {post.PublishDateTime}");
             }
 
             Console.WriteLine();
-            Console.Write("New post name (blank to leave unchanged: ");
+            Console.Write("New post name (blank to leave unchanged): ");
             string title = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(title))
             {
                 postToEdit.Title = title;
             }
 
-            Console.Write("New URL (blank to leave unchanged: ");
+            Console.Write("New URL (blank to leave unchanged): ");
             string url = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(url))
             {
                 postToEdit.Url = url;
             }
 
-            Console.Write("New Publish Date Time (blank to leave unchanged: ");
+            Console.Write("New Publish Date Time (blank to leave unchanged): ");
             string date = (Console.ReadLine());
             if(!string.IsNullOrWhiteSpace(date))
             {
                 postToEdit.PublishDateTime = Convert.ToDateTime(date);
             }
 
-            Console.WriteLine("New Author (blank to leave unchanged:");
+            Console.WriteLine("New Author (blank to leave unchanged):");
             List<Author> authors = _authorRepository.GetAll();
 
             foreach (Author a in authors)
@@ -183,13 +183,19 @@ Published: {post.PublishDateTime}");
                 Console.WriteLine($"{a.Id}) {a.FullName}");
             }
             Console.Write("> ");
+            
+            string authorChoice = Console.ReadLine();
 
-            int choice = int.Parse(Console.ReadLine());
-            Author author = authors[choice - 1];
+            if(!string.IsNullOrWhiteSpace(authorChoice))
+            {
+                int choice = int.Parse(authorChoice);
+                Author author = authors[choice - 1];
+                postToEdit.Author = author;
+            }
 
-            postToEdit.Author = author;
 
-            Console.Write("New blog (blank to leave unchanged: ");
+
+            Console.Write("New blog (blank to leave unchanged): ");
             List<Blog> blogs = _blogRepository.GetAll();
             foreach(Blog b in blogs)
             {
@@ -197,11 +203,14 @@ Published: {post.PublishDateTime}");
             }
             Console.Write("> ");
 
-            int bChoice = int.Parse(Console.ReadLine());
-            Blog blog = blogs[bChoice - 1];
+            string blogChoice = Console.ReadLine();
 
-            postToEdit.Blog = blog;
-            
+            if(!string.IsNullOrWhiteSpace(blogChoice))
+            {
+                int bChoice = int.Parse(blogChoice);
+                Blog blog = blogs[bChoice - 1];
+                postToEdit.Blog = blog;
+            }           
 
             _postRepository.Update(postToEdit);
         }
