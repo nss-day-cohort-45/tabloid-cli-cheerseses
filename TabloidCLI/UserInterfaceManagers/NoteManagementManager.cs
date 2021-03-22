@@ -58,7 +58,8 @@ namespace TabloidCLI.UserInterfaceManagers
             List<Note> notes = _noteRepository.GetAll();
             foreach (Note note in notes)
             {
-                Console.WriteLine(note);
+                Console.WriteLine($"{note.Title} -- {note.Content} ({note.CreateDateTime})");
+                
             }
             Console.WriteLine("");
 
@@ -78,12 +79,13 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.Write("Creation Date and Time: ");
             note.CreateDateTime = Convert.ToDateTime((Console.ReadLine()));
 
-            //Console.Write("Related Posts: \n");
+            Console.Write("Related Posts: \n");
             List<Post> posts = _postRepository.GetAll();
-
+            int count = 1;
             foreach (Post p in posts)
             {
-                Console.WriteLine($"{p.Id} - {p.Title}");
+                Console.WriteLine($"{count} - {p.Title}");
+                count++;
             }
 
             int choice = int.Parse(Console.ReadLine());

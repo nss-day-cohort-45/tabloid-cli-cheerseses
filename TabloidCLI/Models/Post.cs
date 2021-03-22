@@ -13,5 +13,6 @@ namespace TabloidCLI.Models
         public Author Author { get; set; }
         public Blog Blog { get; set; }
         public List<Tag> Tags { get; set; } = new List<Tag>();
+        public List<Note> Notes { get; set; } = new List<Note>();
     }
 }
