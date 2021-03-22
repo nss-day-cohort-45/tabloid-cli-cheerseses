@@ -79,6 +79,7 @@ namespace TabloidCLI
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO Tag (Name) VALUES (@Name)";
+                    cmd.Parameters.AddWithValue("@Name", tag.Name);
 
                     cmd.ExecuteNonQuery();
                 }
