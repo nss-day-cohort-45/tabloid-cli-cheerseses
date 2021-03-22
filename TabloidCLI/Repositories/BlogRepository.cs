@@ -54,7 +54,7 @@ namespace TabloidCLI
                                                b.Url,
                                                t.Id AS TagId
                                           FROM Blog b
-                                               LEFT JOIN Tag t on t.Id =                                           b.TagId";
+                                               LEFT JOIN Tag t on t.Id = b.TagId";
                     cmd.Parameters.AddWithValue("@id", id);
 
                     Blog blog = null;
