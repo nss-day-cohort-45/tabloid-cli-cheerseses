@@ -7,6 +7,8 @@ namespace TabloidCLI.UserInterfaceManagers
     public class ColorManager : IUserInterfaceManager
     {
         readonly IUserInterfaceManager _parentUI;
+        ConsoleColor bgColor = new ConsoleColor();
+        ConsoleColor fgColor = new ConsoleColor();
 
         public ColorManager(IUserInterfaceManager parentUI)
         {
@@ -16,35 +18,47 @@ namespace TabloidCLI.UserInterfaceManagers
         public IUserInterfaceManager Execute()
         {
             Console.WriteLine("Background Color Menu");
-            Console.WriteLine(" 1) ");
-            Console.WriteLine(" 2) ");
-            Console.WriteLine(" 3) ");
-            Console.WriteLine(" 4) ");
+            Console.WriteLine(" 1) White");
+            Console.WriteLine(" 2) Blue");
+            Console.WriteLine(" 3) Red");
+            Console.WriteLine(" 4) Green");
             Console.WriteLine(" 5) Reset to Default");
-            Console.WriteLine(" 0) Go Back without making changes");
+            Console.WriteLine(" 0) Go Back");
 
             Console.Write("> ");
             string choice = Console.ReadLine();
             switch (choice)
             { 
                 case "1":
+                    bgColor = ConsoleColor.White;
+                    fgColor = ConsoleColor.Black;
                     Color();
                     return this;
                 case "2":
+                    bgColor = ConsoleColor.DarkBlue;
+                    fgColor = ConsoleColor.White;
                     Color();
                     return this;
                 case "3":
+                    bgColor = ConsoleColor.DarkRed;
+                    fgColor = ConsoleColor.White;
                     Color();
                     return this;
                 case "4":
+                    bgColor = ConsoleColor.DarkGreen;
+                    fgColor = ConsoleColor.White;
                     Color();
                     return this;
                 case "5":
-                    Color();
+                    Console.ResetColor();
+                    Console.Clear();
+                    Console.WriteLine("");
                     return this;
                 case "0":
+                    Console.Clear();
                     return _parentUI;
                 default:
+                    Console.Clear();
                     Console.WriteLine("Invalid Selection");
                     return this;
             }
@@ -53,9 +67,8 @@ namespace TabloidCLI.UserInterfaceManagers
         private void Color()
         {
 
-
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.BackgroundColor = ConsoleColor.White;
+            Console.BackgroundColor = bgColor;
+            Console.ForegroundColor = fgColor;
 
             Console.Clear();
 

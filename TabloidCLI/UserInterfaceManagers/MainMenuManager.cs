@@ -34,16 +34,16 @@ namespace TabloidCLI.UserInterfaceManagers
             string choice = Console.ReadLine();
             switch (choice)
             {
-                case "1": return new JournalManager(this, CONNECTION_STRING);
-                case "2": return new BlogManager(this, CONNECTION_STRING);
-                case "3": return new AuthorManager(this, CONNECTION_STRING);
-                case "4": return new PostManager(this, CONNECTION_STRING);
-                case "5": return new TagManager(this, CONNECTION_STRING);
-                case "6": return new SearchManager(this, CONNECTION_STRING);
+                case "1": Console.Clear(); return new JournalManager(this, CONNECTION_STRING);
+                case "2": Console.Clear(); return new BlogManager(this, CONNECTION_STRING);
+                case "3": Console.Clear(); return new AuthorManager(this, CONNECTION_STRING);
+                case "4": Console.Clear(); return new PostManager(this, CONNECTION_STRING);
+                case "5": Console.Clear(); return new TagManager(this, CONNECTION_STRING);
+                case "6": Console.Clear(); return new SearchManager(this, CONNECTION_STRING);
                 case "0":
                     Console.WriteLine("Good bye");
                     return null;
-                case "*": return new ColorManager(this);
+                case "*": Console.Clear(); return new ColorManager(this);
                 default:
                     Console.WriteLine("Invalid Selection");
                     return this;
