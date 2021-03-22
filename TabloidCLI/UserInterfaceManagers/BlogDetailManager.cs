@@ -62,7 +62,13 @@ namespace TabloidCLI.UserInterfaceManagers
             Blog blog = _blogRepository.Get(_blogId);
             Console.WriteLine($"Title: {blog.Title}");
             Console.WriteLine($"Url: {blog.Url}");
-            Console.WriteLine();
+            Console.WriteLine($"Tags:");
+            foreach (Tag tag in blog.Tags)
+            {
+                Console.WriteLine(" " + tag);
+            }
+
+            Console.WriteLine("");
         }
 
         private void ViewPosts()
