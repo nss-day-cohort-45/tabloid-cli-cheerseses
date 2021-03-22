@@ -11,6 +11,7 @@ namespace TabloidCLI.UserInterfaceManagers
         private AuthorRepository _authorRepository;
         private PostRepository _postRepository;
         private TagRepository _tagRepository;
+        private BlogRepository _blogRepository;
         private int _authorId;
 
         public AuthorDetailManager(IUserInterfaceManager parentUI, string connectionString, int authorId)
@@ -19,6 +20,7 @@ namespace TabloidCLI.UserInterfaceManagers
             _authorRepository = new AuthorRepository(connectionString);
             _postRepository = new PostRepository(connectionString);
             _tagRepository = new TagRepository(connectionString);
+            _blogRepository = new BlogRepository(connectionString);
             _authorId = authorId;
         }
 
@@ -74,9 +76,9 @@ namespace TabloidCLI.UserInterfaceManagers
             List<Post> posts = _postRepository.GetByAuthor(_authorId);
             foreach (Post post in posts)
             {
-                Console.WriteLine(post);
+                Console.WriteLine($"{post.Blog.Title} - {post.Blog.Url}");
             }
-            Console.WriteLine();
+            Console.WriteLine("");
         }
 
         private void AddTag()
