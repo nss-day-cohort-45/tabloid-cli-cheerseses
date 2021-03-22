@@ -60,5 +60,20 @@ namespace TabloidCLI.UserInterfaceManagers
                 results.Display();
             }
         }
+
+        private void SearchBlogs()
+        {
+            Console.Write("Tag> ");
+        }
+
+        private void SearchPosts()
+        {
+
+        }
+
+        private void SearchAll()
+        {
+
+        }
     }
 }
