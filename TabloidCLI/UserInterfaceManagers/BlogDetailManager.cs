@@ -64,6 +64,16 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine();
         }
 
+        private void ViewPosts()
+        {
+            List<Post> posts = _postRepository.GetByAuthor(_authorId);
+            foreach (Post post in posts)
+            {
+                Console.WriteLine($"{post.Blog.Title} - {post.Blog.Url}");
+            }
+            Console.WriteLine("");
+
+        }
 
         //private void AddTag()
         //{
