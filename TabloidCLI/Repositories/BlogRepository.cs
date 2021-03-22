@@ -42,6 +42,7 @@ namespace TabloidCLI
             }
         }
 
+
         public Blog Get(int id)
         {
             using (SqlConnection conn = Connection)
@@ -49,12 +50,15 @@ namespace TabloidCLI
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT b.Id AS BlogId,
-                                               b.Title,
-                                               b.Url,
-                                               t.Id AS TagId
-                                          FROM Blog b
-                                               LEFT JOIN Tag t on t.Id =                                           b.TagId";
+                    //t.Id AS TagId
+                    //FROM Blog b
+                    //LEFT JOIN Tag t on t.Id = b.Id";
+
+                    cmd.CommandText = @"SELECT Id,
+                                               Title,
+                                               Url
+                                        FROM Blog
+                                        WHERE Id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
 
                     Blog blog = null;
@@ -66,20 +70,20 @@ namespace TabloidCLI
                         {
                             blog = new Blog()
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("BlogId")),
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
                                 Title = reader.GetString(reader.GetOrdinal("Title")),
                                 Url = reader.GetString(reader.GetOrdinal("Url"))
                             };
                         }
 
-                        if (!reader.IsDBNull(reader.GetOrdinal("TagId")))
-                        {
-                            blog.Tags.Add(new Tag()
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("TagId")),
-                                Name = reader.GetString(reader.GetOrdinal("Name"))
-                            });
-                        }
+                        //if (!reader.IsDBNull(reader.GetOrdinal("TagId")))
+                        //{
+                        //    blog.Tags.Add(new Tag()
+                        //    {
+                        //        Id = reader.GetInt32(reader.GetOrdinal("TagId")),
+                        //        Name = reader.GetString(reader.GetOrdinal("Name"))
+                        //    });
+                        //}
                     }
 
                     reader.Close();
