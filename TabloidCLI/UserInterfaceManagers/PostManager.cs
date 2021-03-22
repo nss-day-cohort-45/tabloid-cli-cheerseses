@@ -29,6 +29,7 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine(" 3) Edit Post");
             Console.WriteLine(" 4) Remove Post");
             Console.WriteLine(" 5) Note Management");
+            Console.WriteLine(" 6) Post Details");
             Console.WriteLine(" 0) Return to Main Menu");
 
             Console.Write("> ");
@@ -50,6 +51,16 @@ namespace TabloidCLI.UserInterfaceManagers
                 case "5":
                    
                     return this;
+                case "6":
+                    Post post = Choose();
+                    if (post == null)
+                    {
+                        return this;
+                    }
+                    else
+                    {
+                        return new PostDetailManager(this, _connectionString, post.Id);
+                    }
                 case "0":
                     return _parentUI;
                 default:
@@ -63,10 +74,7 @@ namespace TabloidCLI.UserInterfaceManagers
             List<Post> posts = _postRepository.GetAll();
             foreach (Post post in posts)
             {
-                Console.WriteLine(@$"Id: {post.Id}
-Title: {post.Title} 
-Url: {post.Url} 
-Published: {post.PublishDateTime}");
+                Console.WriteLine($"Title: {post.Title} - Url: {post.Url}");
             }
         }
 
@@ -118,7 +126,7 @@ Published: {post.PublishDateTime}");
             Console.WriteLine("Please Choose An Author:");
             List<Author> authors = _authorRepository.GetAll();
 
-            foreach(Author a in authors)
+            foreach (Author a in authors)
             {
                 Console.WriteLine($"{a.Id}) {a.FullName}");
             }
@@ -131,7 +139,7 @@ Published: {post.PublishDateTime}");
 
 
             List<Blog> blogs = _blogRepository.GetAll();
-            foreach(Blog b in blogs)
+            foreach (Blog b in blogs)
             {
                 Console.WriteLine($"{b.Id}) {b.Title}");
             }
@@ -141,8 +149,19 @@ Published: {post.PublishDateTime}");
             Blog blog = blogs[bChoice - 1];
 
             post.Blog = blog;
-  
+
             _postRepository.Insert(post);
+        }
+
+        private void View()
+        {
+            Post postToView = Choose("Which post would you like to view?");
+            if (postToView != null)
+            {
+                _postRepository.Get(postToView.Id);
+            }
+
+            Console.WriteLine($"Title: {postToView.Title} - Url: {postToView.Url}");
         }
 
         //    private void Edit()
