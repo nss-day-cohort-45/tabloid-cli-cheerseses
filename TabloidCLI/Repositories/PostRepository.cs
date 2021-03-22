@@ -4,7 +4,6 @@ using Microsoft.Data.SqlClient;
 using TabloidCLI.Models;
 using TabloidCLI.Repositories;
 
-//namespace TabloidCLI.Repositories
 namespace TabloidCLI
 {
     public class PostRepository : DatabaseConnector, IRepository<Post>
@@ -33,7 +32,15 @@ namespace TabloidCLI
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Title = reader.GetString(reader.GetOrdinal("Title")),
                             Url = reader.GetString(reader.GetOrdinal("Url")),
-                            PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime"))
+                            PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                            Author = new Author()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("AuthorId")),
+                            },
+                            Blog = new Blog()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("BlogId")),
+                            }
                         };          
                         posts.Add(post);
                     }
@@ -47,7 +54,34 @@ namespace TabloidCLI
 
         public Post Get(int id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT Id, Title, Url, PublishDateTime FROM Post WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    Post post = null;
+
+                    // If we only expect a single row back from the database, we don't need a while loop.
+                    if (reader.Read())
+                    {
+                        post = new Post
+                        {
+                            Id = id,
+                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                            Url = reader.GetString(reader.GetOrdinal("Url")),
+                            PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                        };
+                    }
+
+                    reader.Close();
+
+                    return post;
+                }
+            }
         }
 
         public List<Post> GetByAuthor(int authorId)
@@ -121,7 +155,7 @@ namespace TabloidCLI
                     cmd.Parameters.AddWithValue("@title", post.Title);
                     cmd.Parameters.AddWithValue("@url", post.Url);
                     cmd.Parameters.AddWithValue("@publishDateTime", post.PublishDateTime);
-                    cmd.Parameters.AddWithValue("authorId", post.Author.Id);
+                    cmd.Parameters.AddWithValue("@authorId", post.Author.Id);
                     cmd.Parameters.AddWithValue("@blogId", post.Blog.Id);
 
                     cmd.ExecuteNonQuery();
@@ -132,12 +166,44 @@ namespace TabloidCLI
 
         public void Update(Post post)
         {
-            throw new NotImplementedException();
+            using(SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using(SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Post
+                                        SET Title = @title,
+                                            Url = @url,
+                                            PublishDateTime = @publishDateTime,
+                                            AuthorId = @authorId,
+                                            BlogId = @blogId
+                                         WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@title", post.Title);
+                    cmd.Parameters.AddWithValue("@url", post.Url);
+                    cmd.Parameters.AddWithValue("@publishDateTime", post.PublishDateTime);
+                    cmd.Parameters.AddWithValue("@authorId", post.Author.Id);
+                    cmd.Parameters.AddWithValue("@blogId", post.Blog.Id);
+                    cmd.Parameters.AddWithValue("@id", post.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM Post WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

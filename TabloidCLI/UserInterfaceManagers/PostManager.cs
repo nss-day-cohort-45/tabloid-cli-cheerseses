@@ -9,6 +9,7 @@ namespace TabloidCLI.UserInterfaceManagers
         private readonly IUserInterfaceManager _parentUI;
         private PostRepository _postRepository;
         private AuthorRepository _authorRepository;
+        private BlogRepository _blogRepository;
         private string _connectionString;
 
         public PostManager(IUserInterfaceManager parentUI, string connectionString)
@@ -16,6 +17,7 @@ namespace TabloidCLI.UserInterfaceManagers
             _parentUI = parentUI;
             _postRepository = new PostRepository(connectionString);
             _authorRepository = new AuthorRepository(connectionString);
+            _blogRepository = new BlogRepository(connectionString);
             _connectionString = connectionString;
         }
 
@@ -23,10 +25,11 @@ namespace TabloidCLI.UserInterfaceManagers
         {
             Console.WriteLine("Post Menu");
             Console.WriteLine(" 1) List Posts");
-            Console.WriteLine(" 2) Add Post");
-            Console.WriteLine(" 3) Edit Post");
-            Console.WriteLine(" 4) Remove Post");
-            Console.WriteLine(" 5) Note Management");
+            Console.WriteLine(" 2) Post Details");
+            Console.WriteLine(" 3) Add Post");
+            Console.WriteLine(" 4) Edit Post");
+            Console.WriteLine(" 5) Remove Post");
+            Console.WriteLine(" 6) Note Management");
             Console.WriteLine(" 0) Return to Main Menu");
 
             Console.Write("> ");
@@ -37,16 +40,27 @@ namespace TabloidCLI.UserInterfaceManagers
                     List();
                     return this;
                 case "2":
-                    Add();
+                    Post post = Choose();
+                    if (post == null)
+                    {
+                        return this;
+                    }
+                    else
+                    {
+                        return new PostDetailManager(this, _connectionString, post.Id);
+                    }
                     return this;
                 case "3":
-                    //Add();
+                    Add();
                     return this;
                 case "4":
-                    //Edit();
+                    Edit();
                     return this;
                 case "5":
-                    //Remove();
+                    Remove();
+                    return this;
+                case "6":
+                    // Note management method here
                     return this;
                 case "0":
                     return _parentUI;
@@ -61,43 +75,40 @@ namespace TabloidCLI.UserInterfaceManagers
             List<Post> posts = _postRepository.GetAll();
             foreach (Post post in posts)
             {
-                Console.WriteLine(@$"Id: {post.Id}
-Title: {post.Title} 
-Url: {post.Url} 
-Published: {post.PublishDateTime}");
+                Console.WriteLine($"Title: {post.Title} - Url: {post.Url}");
             }
         }
 
-        //private Post Choose(string prompt = null)
-        //{
-        //    if (prompt == null)
-        //    {
-        //        prompt = "Please choose a post:";
-        //    }
+        private Post Choose(string prompt = null)
+        {
+            if (prompt == null)
+            {
+                prompt = "Please choose a post:";
+            }
 
-        //    Console.WriteLine(prompt);
+            Console.WriteLine(prompt);
 
-        //    List<Post> posts = _postRepository.GetAll();
+            List<Post> posts = _postRepository.GetAll();
 
-        //    for (int i = 0; i < posts.Count; i++)
-        //    {
-        //        Post post = posts[i];
-        //        Console.WriteLine($" {i + 1}) {post.Title}");
-        //    }
-        //    Console.Write("> ");
+            for (int i = 0; i < posts.Count; i++)
+            {
+                Post post = posts[i];
+                Console.WriteLine($" {i + 1}) {post.Title}");
+            }
+            Console.Write("> ");
 
-        //    string input = Console.ReadLine();
-        //    try
-        //    {
-        //        int choice = int.Parse(input);
-        //        return posts[choice - 1];
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("Invalid Selection");
-        //        return null;
-        //    }
-        //}
+            string input = Console.ReadLine();
+            try
+            {
+                int choice = int.Parse(input);
+                return posts[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
+        }
 
         private void Add()
         {
@@ -116,57 +127,124 @@ Published: {post.PublishDateTime}");
             Console.WriteLine("Please Choose An Author:");
             List<Author> authors = _authorRepository.GetAll();
 
-            foreach(Author a in authors)
+            foreach (Author a in authors)
             {
                 Console.WriteLine($"{a.Id}) {a.FullName}");
             }
             Console.Write("> ");
-            post.Author.Id = int.Parse(Console.ReadLine());
 
-            // Setup blog list here: List<Blog> blogs = _blogRepository.GetAll();
+            int choice = int.Parse(Console.ReadLine());
+            Author author = authors[choice - 1];
+
+            post.Author = author;
+
+            Console.WriteLine("Please Choose A Blog:");
+            List<Blog> blogs = _blogRepository.GetAll();
+            foreach (Blog b in blogs)
+            {
+                Console.WriteLine($"{b.Id}) {b.Title}");
+            }
+            Console.Write("> ");
+
+            int bChoice = int.Parse(Console.ReadLine());
+            Blog blog = blogs[bChoice - 1];
+
+            post.Blog = blog;
 
             _postRepository.Insert(post);
         }
 
-        //    private void Edit()
-        //    {
-        //        Post postToEdit = Choose("Which author would you like to edit?");
-        //        if (postToEdit == null)
-        //        {
-        //            return;
-        //        }
+        private void View()
+        {
+            Post postToView = Choose("Which post would you like to view?");
+            if (postToView != null)
+            {
+                _postRepository.Get(postToView.Id);
+            }
 
-        //        Console.WriteLine();
-        //        Console.Write("New first name (blank to leave unchanged: ");
-        //        string firstName = Console.ReadLine();
-        //        if (!string.IsNullOrWhiteSpace(firstName))
-        //        {
-        //            authorToEdit.FirstName = firstName;
-        //        }
-        //        Console.Write("New last name (blank to leave unchanged: ");
-        //        string lastName = Console.ReadLine();
-        //        if (!string.IsNullOrWhiteSpace(lastName))
-        //        {
-        //            authorToEdit.LastName = lastName;
-        //        }
-        //        Console.Write("New bio (blank to leave unchanged: ");
-        //        string bio = Console.ReadLine();
-        //        if (!string.IsNullOrWhiteSpace(bio))
-        //        {
-        //            authorToEdit.Bio = bio;
-        //        }
+            Console.WriteLine($"Title: {postToView.Title} - Url: {postToView.Url}");
+        }
 
-        //        _authorRepository.Update(authorToEdit);
-        //    }
+        private void Edit()
+        {
+            Post postToEdit = Choose("Which post would you like to edit?");
+            if (postToEdit == null)
+            {
+                return;
+            }
 
-        //    private void Remove()
-        //    {
-        //        Author authorToDelete = Choose("Which author would you like to remove?");
-        //        if (authorToDelete != null)
-        //        {
-        //            _authorRepository.Delete(authorToDelete.Id);
-        //        }
-        //    }
-        //}
+            Console.WriteLine();
+            Console.Write("New post name (blank to leave unchanged): ");
+            string title = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                postToEdit.Title = title;
+            }
+
+            Console.Write("New URL (blank to leave unchanged): ");
+            string url = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                postToEdit.Url = url;
+            }
+
+            Console.Write("New Publish Date Time (blank to leave unchanged): ");
+            string date = (Console.ReadLine());
+            if(!string.IsNullOrWhiteSpace(date))
+            {
+                postToEdit.PublishDateTime = Convert.ToDateTime(date);
+            }
+
+            Console.WriteLine("New Author (blank to leave unchanged):");
+            List<Author> authors = _authorRepository.GetAll();
+
+            foreach (Author a in authors)
+            {
+                Console.WriteLine($"{a.Id}) {a.FullName}");
+            }
+            Console.Write("> ");
+            
+            string authorChoice = Console.ReadLine();
+
+            if(!string.IsNullOrWhiteSpace(authorChoice))
+            {
+                int choice = int.Parse(authorChoice);
+                Author author = authors[choice - 1];
+                postToEdit.Author = author;
+            }
+
+
+
+            Console.Write("New blog (blank to leave unchanged): ");
+            List<Blog> blogs = _blogRepository.GetAll();
+            foreach(Blog b in blogs)
+            {
+                Console.WriteLine($"{b.Id}) {b.Title}");
+            }
+            Console.Write("> ");
+
+            string blogChoice = Console.ReadLine();
+
+            if(!string.IsNullOrWhiteSpace(blogChoice))
+            {
+                int bChoice = int.Parse(blogChoice);
+                Blog blog = blogs[bChoice - 1];
+                postToEdit.Blog = blog;
+            }           
+
+            _postRepository.Update(postToEdit);
+        }
+
+        private void Remove()
+        {
+            Post postToDelete = Choose("Which post would you like to remove?");
+            if (postToDelete != null)
+            {
+                _postRepository.Delete(postToDelete.Id);
+            }
+        }
     }
-}
+ }
+
+
+
