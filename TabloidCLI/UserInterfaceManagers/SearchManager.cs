@@ -82,7 +82,19 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void SearchPosts()
         {
+            Console.Write("Tag> ");
+            string tagName = Console.ReadLine();
 
+            SearchResults<Post> results = _tagRepository.SearchPosts(tagName);
+
+            if (results.NoResultsFound)
+            {
+                Console.WriteLine($"No results for {tagName}");
+            }
+            else
+            {
+                results.Display();
+            }
         }
 
         private void SearchAll()
