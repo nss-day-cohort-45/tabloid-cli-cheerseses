@@ -70,7 +70,7 @@ namespace TabloidCLI.UserInterfaceManagers
             List<Post> posts = _postRepository.GetByBlog(_blogId);
             foreach (Post post in posts)
             {
-                Console.WriteLine($"{post.Blog.Title} - {post.Blog.Url}");
+                Console.WriteLine($"{post.Title} - {post.Url}");
             }
             Console.WriteLine("");
 
