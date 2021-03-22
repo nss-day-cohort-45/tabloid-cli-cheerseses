@@ -59,7 +59,15 @@ namespace TabloidCLI.UserInterfaceManagers
                         return new PostDetailManager(this, _connectionString, post.Id);
                     }
                 case "6":
-                    // Note management method here
+                    Post postNotes = Choose();
+                    if (postNotes == null)
+                    {
+                        return this;
+                    }
+                    else
+                    {
+                        return new NoteManagementManager(this, _connectionString, postNotes.Id);
+                    }
                     return this;
                 case "0":
                     return _parentUI;
