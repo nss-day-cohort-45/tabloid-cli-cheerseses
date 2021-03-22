@@ -180,6 +180,7 @@ namespace TabloidCLI
                             Title = reader.GetString(reader.GetOrdinal("Title")),
                             Url = reader.GetString(reader.GetOrdinal("Url")),
                         };
+                        results.Add(blog);
                     }
 
                     reader.Close();
