@@ -42,6 +42,7 @@ namespace TabloidCLI
             }
         }
 
+
         public Blog Get(int id)
         {
             using (SqlConnection conn = Connection)
@@ -49,12 +50,19 @@ namespace TabloidCLI
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT b.Id AS BlogId,
+                    //t.Id AS TagId
+                    //FROM Blog b
+                    //LEFT JOIN Tag t on t.Id = b.Id";
+
+                    cmd.CommandText = @"SELECT b.Id,
                                                b.Title,
                                                b.Url,
-                                               t.Id AS TagId
-                                          FROM Blog b
-                                               LEFT JOIN Tag t on t.Id = b.TagId";
+                                               bt.Id AS TagId,
+                                               t.Name
+                                        FROM Blog b
+                                            LEFT JOIN BlogTag bt on bt.BlogId = b.Id
+                                            LEFT JOIN Tag t on t.id = bt.TagId
+                                        WHERE b.Id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
 
                     Blog blog = null;
@@ -66,7 +74,7 @@ namespace TabloidCLI
                         {
                             blog = new Blog()
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("BlogId")),
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
                                 Title = reader.GetString(reader.GetOrdinal("Title")),
                                 Url = reader.GetString(reader.GetOrdinal("Url"))
                             };
