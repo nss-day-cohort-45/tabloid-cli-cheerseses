@@ -25,10 +25,11 @@ namespace TabloidCLI.UserInterfaceManagers
         {
             Console.WriteLine("Post Menu");
             Console.WriteLine(" 1) List Posts");
-            Console.WriteLine(" 2) Add Post");
-            Console.WriteLine(" 3) Edit Post");
-            Console.WriteLine(" 4) Remove Post");
-            Console.WriteLine(" 5) Note Management");
+            Console.WriteLine(" 2) Post Details");
+            Console.WriteLine(" 3) Add Post");
+            Console.WriteLine(" 4) Edit Post");
+            Console.WriteLine(" 5) Remove Post");
+            Console.WriteLine(" 6) Note Management");
             Console.WriteLine(" 0) Return to Main Menu");
 
             Console.Write("> ");
@@ -39,16 +40,27 @@ namespace TabloidCLI.UserInterfaceManagers
                     List();
                     return this;
                 case "2":
-                    Add();
+                    Post post = Choose();
+                    if (post == null)
+                    {
+                        return this;
+                    }
+                    else
+                    {
+                        return new PostDetailManager(this, _connectionString, post.Id);
+                    }
                     return this;
                 case "3":
-                    Edit();
+                    Add();
                     return this;
                 case "4":
-                    Remove();
+                    Edit();
                     return this;
                 case "5":
-                   
+                    Remove();
+                    return this;
+                case "6":
+                    // Note management method here
                     return this;
                 case "0":
                     return _parentUI;
@@ -63,10 +75,7 @@ namespace TabloidCLI.UserInterfaceManagers
             List<Post> posts = _postRepository.GetAll();
             foreach (Post post in posts)
             {
-                Console.WriteLine(@$"Id: {post.Id}
-Title: {post.Title} 
-Url: {post.Url} 
-Published: {post.PublishDateTime}");
+                Console.WriteLine($"Title: {post.Title} - Url: {post.Url}");
             }
         }
 
@@ -118,7 +127,7 @@ Published: {post.PublishDateTime}");
             Console.WriteLine("Please Choose An Author:");
             List<Author> authors = _authorRepository.GetAll();
 
-            foreach(Author a in authors)
+            foreach (Author a in authors)
             {
                 Console.WriteLine($"{a.Id}) {a.FullName}");
             }
@@ -129,9 +138,9 @@ Published: {post.PublishDateTime}");
 
             post.Author = author;
 
-
+            Console.WriteLine("Please Choose A Blog:");
             List<Blog> blogs = _blogRepository.GetAll();
-            foreach(Blog b in blogs)
+            foreach (Blog b in blogs)
             {
                 Console.WriteLine($"{b.Id}) {b.Title}");
             }
@@ -141,8 +150,19 @@ Published: {post.PublishDateTime}");
             Blog blog = blogs[bChoice - 1];
 
             post.Blog = blog;
-  
+
             _postRepository.Insert(post);
+        }
+
+        private void View()
+        {
+            Post postToView = Choose("Which post would you like to view?");
+            if (postToView != null)
+            {
+                _postRepository.Get(postToView.Id);
+            }
+
+            Console.WriteLine($"Title: {postToView.Title} - Url: {postToView.Url}");
         }
 
         private void Edit()

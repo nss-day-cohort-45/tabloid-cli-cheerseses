@@ -4,7 +4,6 @@ using Microsoft.Data.SqlClient;
 using TabloidCLI.Models;
 using TabloidCLI.Repositories;
 
-//namespace TabloidCLI.Repositories
 namespace TabloidCLI
 {
     public class PostRepository : DatabaseConnector, IRepository<Post>
@@ -55,7 +54,34 @@ namespace TabloidCLI
 
         public Post Get(int id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT Id, Title, Url, PublishDateTime FROM Post WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    Post post = null;
+
+                    // If we only expect a single row back from the database, we don't need a while loop.
+                    if (reader.Read())
+                    {
+                        post = new Post
+                        {
+                            Id = id,
+                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                            Url = reader.GetString(reader.GetOrdinal("Url")),
+                            PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                        };
+                    }
+
+                    reader.Close();
+
+                    return post;
+                }
+            }
         }
 
         public List<Post> GetByAuthor(int authorId)
