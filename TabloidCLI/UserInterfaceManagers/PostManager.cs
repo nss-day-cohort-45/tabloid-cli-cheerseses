@@ -12,6 +12,7 @@ namespace TabloidCLI.UserInterfaceManagers
         private BlogRepository _blogRepository;
         private string _connectionString;
 
+
         public PostManager(IUserInterfaceManager parentUI, string connectionString)
         {
             _parentUI = parentUI;
@@ -59,16 +60,7 @@ namespace TabloidCLI.UserInterfaceManagers
                         return new PostDetailManager(this, _connectionString, post.Id);
                     }
                 case "6":
-                    Post postNotes = Choose();
-                    if (postNotes == null)
-                    {
-                        return this;
-                    }
-                    else
-                    {
-                        return new NoteManagementManager(this, _connectionString, postNotes.Id);
-                    }
-                    return this;
+                     return new NoteManagementManager(this, _connectionString);
                 case "0":
                     return _parentUI;
                 default:
@@ -86,36 +78,36 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
-        //private Post Choose(string prompt = null)
-        //{
-        //    if (prompt == null)
-        //    {
-        //        prompt = "Please choose a post:";
-        //    }
+        private Post Choose(string prompt = null)
+        {
+            if (prompt == null)
+            {
+                prompt = "Please choose a post:";
+            }
 
-        //    Console.WriteLine(prompt);
+            Console.WriteLine(prompt);
 
-        //    List<Post> posts = _postRepository.GetAll();
+            List<Post> posts = _postRepository.GetAll();
 
-        //    for (int i = 0; i < posts.Count; i++)
-        //    {
-        //        Post post = posts[i];
-        //        Console.WriteLine($" {i + 1}) {post.Title}");
-        //    }
-        //    Console.Write("> ");
+            for (int i = 0; i < posts.Count; i++)
+            {
+                Post post = posts[i];
+                Console.WriteLine($" {i + 1}) {post.Title}");
+            }
+            Console.Write("> ");
 
-        //    string input = Console.ReadLine();
-        //    try
-        //    {
-        //        int choice = int.Parse(input);
-        //        return posts[choice - 1];
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("Invalid Selection");
-        //        return null;
-        //    }
-        //}
+            string input = Console.ReadLine();
+            try
+            {
+                int choice = int.Parse(input);
+                return posts[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
+        }
 
         private void Add()
         {

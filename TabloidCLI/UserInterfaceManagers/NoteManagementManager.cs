@@ -12,21 +12,18 @@ namespace TabloidCLI.UserInterfaceManagers
         private PostRepository _postRepository;
         private NoteRepository _noteRepository;
         private TagRepository _tagRepository;
-        private int _noteId;
 
-        public NoteManagementManager(IUserInterfaceManager parentUI, string connectionString, int noteId)
+        public NoteManagementManager(IUserInterfaceManager parentUI, string connectionString)
         {
             _parentUI = parentUI;
             _authorRepository = new AuthorRepository(connectionString);
             _postRepository = new PostRepository(connectionString);
             _noteRepository = new NoteRepository(connectionString);
             _tagRepository = new TagRepository(connectionString);
-            _noteId = noteId;
         }
 
         public IUserInterfaceManager Execute()
         {
-            Note note = _noteRepository.Get(_noteId);
             Console.WriteLine(" 1) List Notes");
             Console.WriteLine(" 2) Add Note");
             Console.WriteLine(" 3) Remove Note");
@@ -43,7 +40,7 @@ namespace TabloidCLI.UserInterfaceManagers
                     Add();
                     return this;
                 case "3":
-                    //RemoveTag();
+                    Remove();
                     return this;
                 case "0":
                     return _parentUI;
@@ -58,8 +55,7 @@ namespace TabloidCLI.UserInterfaceManagers
             List<Note> notes = _noteRepository.GetAll();
             foreach (Note note in notes)
             {
-                Console.WriteLine($"{note.Title} -- {note.Content} ({note.CreateDateTime})");
-                
+                Console.WriteLine($"{note.Title} - {note.Content} - {note.CreateDateTime}");
             }
             Console.WriteLine("");
 
@@ -79,59 +75,83 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.Write("Creation Date and Time: ");
             note.CreateDateTime = Convert.ToDateTime((Console.ReadLine()));
 
-            Console.Write("Related Posts: \n");
-            List<Post> posts = _postRepository.GetAll();
-            int count = 1;
-            foreach (Post p in posts)
-            {
-                Console.WriteLine($"{count} - {p.Title}");
-                count++;
-            }
+            Post postToChoose = Choose("Choose a related post:");
 
-            int choice = int.Parse(Console.ReadLine());
-            Post post = posts[choice - 1];
-
-            note.Post = post;
+            note.Post = postToChoose;
 
             _noteRepository.Insert(note);
         }
 
-        //private void View()
-        //{
-        //    Note note = _noteRepository.Get(_noteId);
-        //    Console.WriteLine($"Title: {note.Title}");
-        //    Console.WriteLine($"Content: {note.Content}");
-        //    Console.WriteLine($"Date Note Created: {note.CreateDateTime}");
-        //    Console.WriteLine();
-        //}
+        private Post Choose(string prompt = null)
+        {
+            if (prompt == null)
+            {
+                prompt = "Please choose a post:";
+            }
 
+            Console.WriteLine(prompt);
 
+            List<Post> posts = _postRepository.GetAll();
 
-        //private void RemoveTag()
-        //{
-        //    Post post = _postRepository.Get(_postId);
+            for (int i = 0; i < posts.Count; i++)
+            {
+                Post post = posts[i];
+                Console.WriteLine($" {i + 1}) {post.Title}");
+            }
+            Console.Write("> ");
 
-        //    Console.WriteLine($"Which tag would you like to remove from {post.Title}?");
-        //    List<Tag> tags = post.Tags;
+            string input = Console.ReadLine();
+            try
+            {
+                int choice = int.Parse(input);
+                return posts[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
+        }
 
-        //    for (int i = 0; i < tags.Count; i++)
-        //    {
-        //        Tag tag = tags[i];
-        //        Console.WriteLine($" {i + 1}) {tag.Name}");
-        //    }
-        //    Console.Write("> ");
+        private Note ChooseNote(string prompt = null)
+        {
+            if (prompt == null)
+            {
+                prompt = "Please choose a post:";
+            }
 
-        //    string input = Console.ReadLine();
-        //    try
-        //    {
-        //        int choice = int.Parse(input);
-        //        Tag tag = tags[choice - 1];
-        //        _postRepository.DeleteTag(post.Id, tag.Id);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("Invalid Selection. Won't remove any tags.");
-        //    }
-        //}
+            Console.WriteLine(prompt);
+
+            List<Note> notes = _noteRepository.GetAll();
+
+            for (int i = 0; i < notes.Count; i++)
+            {
+                Note note = notes[i];
+                Console.WriteLine($" {i + 1}) {note.Title}");
+            }
+            Console.Write("> ");
+
+            string input = Console.ReadLine();
+            try
+            {
+                int choice = int.Parse(input);
+                return notes[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
+        }
+
+        private void Remove()
+        {
+            Note noteToDelete = ChooseNote("Which note would you like to remove?");
+            if (noteToDelete != null)
+            {
+                _noteRepository.Delete(noteToDelete.Id);
+            }
+        }
+
     }
 }

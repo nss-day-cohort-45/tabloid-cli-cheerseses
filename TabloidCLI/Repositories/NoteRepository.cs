@@ -123,11 +123,14 @@ namespace TabloidCLI
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     //OUTPUT INSERTED.Id
-                    cmd.CommandText = @"INSERT INTO Note (Title, Content, CreateDateTime)
-                                        VALUES (@title, @content, @createDateTime)";
+                    cmd.CommandText = @"INSERT INTO Note (Title, Content, CreateDateTime, PostId)
+                                        VALUES (@title, @content, @createDateTime, @postId)";
                     cmd.Parameters.AddWithValue("@title", note.Title);
                     cmd.Parameters.AddWithValue("@content", note.Content);
                     cmd.Parameters.AddWithValue("@createDateTime", note.CreateDateTime);
+                    cmd.Parameters.AddWithValue("@postId", note.Post.Id);
+
+
 
                     cmd.ExecuteNonQuery();
 
