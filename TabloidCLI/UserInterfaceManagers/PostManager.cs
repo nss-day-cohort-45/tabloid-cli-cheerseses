@@ -12,6 +12,7 @@ namespace TabloidCLI.UserInterfaceManagers
         private BlogRepository _blogRepository;
         private string _connectionString;
 
+
         public PostManager(IUserInterfaceManager parentUI, string connectionString)
         {
             _parentUI = parentUI;
@@ -59,8 +60,7 @@ namespace TabloidCLI.UserInterfaceManagers
                         return new PostDetailManager(this, _connectionString, post.Id);
                     }
                 case "6":
-                    // Note management method here
-                    return this;
+                     return new NoteManagementManager(this, _connectionString);
                 case "0":
                     return _parentUI;
                 default:
