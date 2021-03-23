@@ -24,7 +24,6 @@ namespace TabloidCLI.UserInterfaceManagers
 
         public void Display()
         {
-            Console.WriteLine("");
             Console.WriteLine(Title);
 
             foreach (T result in _results)
@@ -33,9 +32,7 @@ namespace TabloidCLI.UserInterfaceManagers
             }
 
             Console.WriteLine();
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
-            Console.Clear();
+
             
         }
     }
