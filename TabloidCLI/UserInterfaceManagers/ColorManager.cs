@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TabloidCLI.Models;
 
 namespace TabloidCLI.UserInterfaceManagers
 {
@@ -9,10 +10,14 @@ namespace TabloidCLI.UserInterfaceManagers
         readonly IUserInterfaceManager _parentUI;
         ConsoleColor bgColor = new ConsoleColor();
         ConsoleColor fgColor = new ConsoleColor();
+        private BGColorRepository _bgColorRepository;
+        private string _connectionString;
 
-        public ColorManager(IUserInterfaceManager parentUI)
+        public ColorManager(IUserInterfaceManager parentUI, string connectionString)
         {
             _parentUI = parentUI;
+            _bgColorRepository = new BGColorRepository(connectionString);
+            _connectionString = connectionString;
         }
 
         public IUserInterfaceManager Execute()
@@ -26,28 +31,30 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine(" 0) Go Back");
 
             Console.Write("> ");
-            string choice = Console.ReadLine();
-            switch (choice)
+            BGColor choice = new BGColor();
+            choice.ColorOption = Console.ReadLine();
+
+            switch (choice.ColorOption)
             { 
                 case "1":
                     bgColor = ConsoleColor.White;
                     fgColor = ConsoleColor.Black;
-                    Color();
+                    Color(choice);
                     return this;
                 case "2":
                     bgColor = ConsoleColor.DarkBlue;
                     fgColor = ConsoleColor.White;
-                    Color();
+                    Color(choice);
                     return this;
                 case "3":
                     bgColor = ConsoleColor.DarkRed;
                     fgColor = ConsoleColor.White;
-                    Color();
+                    Color(choice);
                     return this;
                 case "4":
                     bgColor = ConsoleColor.DarkGreen;
                     fgColor = ConsoleColor.White;
-                    Color();
+                    Color(choice);
                     return this;
                 case "5":
                     Console.ResetColor();
@@ -64,12 +71,12 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
-        private void Color()
+        private void Color(BGColor option)
         {
 
             Console.BackgroundColor = bgColor;
             Console.ForegroundColor = fgColor;
-
+            _bgColorRepository.Update(option);
             Console.Clear();
 
             // this is just to get the color to show.
